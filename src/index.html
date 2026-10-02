@@ -10,8 +10,27 @@
     R = M.random;
 
     f = (a, b) => 30*S(a/19+S(b/23)*2)+25*S(b/13+a/31)+8*S(a/5+b/7);
-    px = py = an = t = o = ac = pt = tu = 0;
+    px=py=an=t=o=ac=pt=tu=0;
     alt=40
+    sp=1.6
+    st=md=mx=my=de=0
+    K={}
+
+    function r(){
+        st=1
+        pt=tu = 0
+        sp=1.6
+        alt=f(px,py)+45
+    }
+    function die(){
+        st=2
+        de=t
+    }
+    go=()=>{if(st==0||st==2&&t>de+50)r()}
+    onkeydown=e=>{K[e.code]=1; if(e.code=='Space')go()}
+    onpointermove=pm;onpointerup=()=>md=0;
+
+    w = (s,y,z,l,v=l||W/2)=>{x.font='bold'+z+'px Arial';x.textAlign=l?'left':'center';x.fillStyle='#2a1408';x.fillText(s,v+1,y+1);x.fillStyle='#fff3d0';x.fillText(s,v,y)}
 
     function U(){
         t++
@@ -19,7 +38,6 @@
     }
     function D(){
         hz=70+pt*35
-
         //ceu
         g = x.createLinearGradient(0,0,0,hz)
         g.addColorStop(0,'#34548a')
@@ -53,22 +71,18 @@
                 if(s < ym){
                     k = 1 - z/260
                     l=.7 + (h - f(X + 3, Y + 3)) / 25
-                    x.fillStyle = `rgba(${210 * l * k + 240 * (1 - k)},
-                                        ${150 * l * k + 195 * (1 - k)},
-                                        ${90 *  l * k + 150 * (1 - k)})`
-                    x.fillRect(i, s, 1, ym - s)
-                    ym = s
+                    x.fillStyle = `rgba(${210*l*k+240*(1-k)},${150*l*k+195*(1-k)},${90*l*k+150*(1-k)})`
+                    x.fillRect(i,s,1,ym-s)
+                    ym=s
                 }
             }
         }
     }
 
-    
+
     function L(n){
-        ac += M.min((n - o) / 16.7,4)
-        o = n
-        for(;ac >= 1; ac --) U()
-        D()
+        ac += M.min((n - o) / 16.7,4);o = n
+        for(;ac >= 1; ac --) U();D()
         requestAnimationFrame(L)
     }
     requestAnimationFrame(L)
