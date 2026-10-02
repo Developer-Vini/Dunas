@@ -9,8 +9,8 @@
     C = M.cos
     R = M.random;
 
-    f = (a, b) => 30*S(a/19+S(b/23)*2)+25*S(b/13+a/31)+8*S(a/5+b/7);
-    px=py=an=t=o=ac=pt=tu=0;
+    f=(a,b)=>20*S(a/25+S(b/30)*2)+15*S(b/18+a/40)+5*S(a/7+b/10)
+    px=py=an=t=o=ac=pm=pt=tu=0;
     alt=40
     sp=1.6
     st=md=mx=my=de=0
@@ -18,7 +18,7 @@
 
     function r(){
         st=1
-        pt=tu = 0
+        pt=tu=0
         sp=1.6
         alt=f(px,py)+45
     }
@@ -27,14 +27,34 @@
         de=t
     }
     go=()=>{if(st==0||st==2&&t>de+50)r()}
-    onkeydown=e=>{K[e.code]=1; if(e.code=='Space')go()}
-    onpointermove=pm;onpointerup=()=>md=0;
+    pm=e=>{
+        mx=e.clientX/c.clientWidth*2-1
+        my=e.clientY/c.clientHeight*2-1
+    }
+    onpointerdown=e=>{pm(e);md=1;go();};
+    onpointermove = e => { if (md) pm(e);};
+    onpointerup=()=>{md=0;mx=my=0;};
 
-    w = (s,y,z,l,v=l||W/2)=>{x.font='bold'+z+'px Arial';x.textAlign=l?'left':'center';x.fillStyle='#2a1408';x.fillText(s,v+1,y+1);x.fillStyle='#fff3d0';x.fillText(s,v,y)}
+    onkeydown=e=>K[e.code]=1
+    onkeyup=e=>K[e.code]=0
+
+    w=(s,y,z,l,v=l||W/2)=>{x.font='bold'+z+'px Arial';x.textAlign=l?'left':'center';x.fillStyle='#2a1408';x.fillText(s,v+1,y+1);x.fillStyle='#fff3d0';x.fillText(s,v,y)}
 
     function U(){
         t++
         an=S(t/90)*.6;px+=S(an)*1.5;py+=C(an)*1.5;alt=f(px,py)+35
+        if(st==1){
+            kx=(K.ArrowRight||K.KeyD?1:0)-(K.ArrowLeft||K.KeyA?1:0);
+            ky=(K.ArrowUp||K.KeyW?1:0)-(K.ArrowDown||K.KeyS?1:0)
+            tu+=(M.max(-1,M.min(1,kx+md*mx))-tu)*.06;
+            pt+=(M.max(-1,M.min(1,ky+md*my))-pt)*.06;
+            an+=tu*.03
+
+            sp=M.max(.7,M.min(3,sp-pt*.03+(1.6-sp)*.01))
+            px+=S(an)*sp;py+=C(an)*sp;
+            alt+=pt*sp*.7-.15-(sp<1?(1-sp)*1.5:0)
+            if(alt<f(px,py)+2)die()
+        }
     }
     function D(){
         hz=70+pt*35
@@ -48,15 +68,27 @@
                 X=px+dx*z
                 Y=py+dy*z
                 h=f(X, Y)
-                s=(alt - h)/z*110+hz|0
+                s=(alt -h)/z*110+hz|0
                 if(s<ym){
                     k=1-z/260
                     l=.7+(h-f(X+3,Y+3))/ 25
                     x.fillStyle=`rgba(${210*l*k+240*(1-k)},${150*l*k+195*(1-k)},${90*l*k+150*(1-k)})`
-                    x.fillRect(i,s,1,ym-s)
-                    ym=s
+                    x.fillRect(i,s,1,ym-s);ym=s
                 }
             }
+        }
+        x.save();x.translate(W/2,H-18-pt*8);x.rotate(tu*.3);
+        x.fillStyle='#3b2a20';x.beginPath();x.moveTo(-30,5);x.lineTo(-5,-2);x.lineTo(0,-9);x.lineTo(5,-2);x.lineTo(30,5);x.lineTo(0,2);x.fill();
+        x.fillStyle='#d98c45';x.fillRect(-30,4,6,1.5);x.fillRect(24,4,6,1.5)
+        x.restore()
+        if(st==0){
+            w('DUNAS',60,34); 
+            w('Space or click to fly',88,9)
+            w('Arrows/WASD: PIlot | Mouse: Hold and Drag',102,8)
+        }
+        if(st==2){
+            x.fillStyle='rgba(20,10,5,.6)';x.fillRect(0,0,W,H)
+            w('finished fly',H/2-10,22);w('Space or click to back')
         }
     }
 
