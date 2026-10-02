@@ -1,1 +1,1 @@
-data:text/html,
+data:text/html,<body style="margin:0;background:%231a1410;touch-action: none;"></body><canvas id=c width=320 height=180 style="width:100%25;max-width:177vh;display:block;margin:auto;"></canvas><script>x=c.getContext("2d"),W=320,H=180,M=Math,S=M.sin,C=M.cos,R=M.random,f=(M,t)=>30*S(M/19+2*S(t/23))+25*S(t/13+M/31)+8*S(M/5+t/7);</script>
