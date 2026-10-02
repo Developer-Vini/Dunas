@@ -15,5 +15,49 @@
         t++
         an=S(t/90)*.6;px+=S(an)*1.5;py+=C(an)*1.5;alt=f(px,py)+35
     }
+    function D(){
+        hz=70+pt*35
 
+        //ceu
+        g = x.createLinearGradient(0,0,0,hz)
+        g.addColorStop(0,'#34548a')
+        g.addColorStop(1, 'rgb(240,195,150)')
+        x.fillStyle = g
+        x.fillRect(0,0,W,H)
+
+        //sol
+        sx = (M.atan2(S(.4-an),C(.4-an))/1.1+.5)*W
+        sy = hz - 26
+        x.fillStyle = 'rgba(255,226,160,.25)'
+        x.beginPath()
+        x.arc(sx, sy, 24, 0, 7)
+        x.fill()
+        x.fillStyle = '#fff3d0'
+        x.beginPath()
+        x.arc(sx, sy, 11, 0, 7)
+        x.fill();
+
+        //terreno
+        for(i = 0; i < W; i++){
+            a = an + (i/W-.5) * 1.1
+            dx = S(a)
+            dy = C(a)
+            ym = H
+            for(z = 1; z < 260; z += 1 + z / 70){
+                X = px + dx * z
+                Y = py + dx * z
+                h = f(X, Y)
+                s = (alt - h)/z * 110 + hz | 0
+                if(s < ym){
+                    k = 1 - z/260
+                    l=.7 + (h - f(X + 3, Y + 3)) / 25
+                    x.fillStyle = `rgba(${210 * l * k + 240 * (1 - k)},
+                                        ${150 * l * k + 195 * (1 - k)},
+                                        ${90 *  l * k + 150 * (1 - k)})`
+                    x.fillRect(i, s, 1, ym - s)
+                    ym = s
+                }
+            }
+        }
+    }
 </script>
