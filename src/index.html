@@ -60,4 +60,13 @@
             }
         }
     }
+
+    function L(n){
+        ac += M.min((n - o) / 16.7,4)
+        o = n
+        for(;ac >= 1; ac --) U()
+        D()
+        requestAnimationFrame(L)
+    }
+    requestAnimationFrame(L)
 </script>
