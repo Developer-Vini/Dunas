@@ -7,9 +7,11 @@
     M = Math
     S = M.sin
     C = M.cos
-    R = M.random
+    R = M.random;
 
     f = (a, b) => 30*S(a/19+S(b/23)*2)+25*S(b/13+a/31)+8*S(a/5+b/7);
+    px = py = an = t = o = ac = pt = tu = 0;
+    alt=40
 
     function U(){
         t++
@@ -45,7 +47,7 @@
             ym = H
             for(z = 1; z < 260; z += 1 + z / 70){
                 X = px + dx * z
-                Y = py + dx * z
+                Y = py + dy * z
                 h = f(X, Y)
                 s = (alt - h)/z * 110 + hz | 0
                 if(s < ym){
