@@ -38,5 +38,14 @@ mkdirSync("dist", { recursive: true });
 writeFileSync("dist/index.html", html);
 writeFileSync("dist/uri.txt", uri);
 
+
+//new(test)
+console.log("src: " + Buffer.byteLength(src) + " bytes");
+console.log("html: " + Buffer.byteLength(html) + " bytes")
+console.log("uri: " + Buffer.byteLength(uri) + " bytes");
+
+//console.log("JS source: ", Buffer.byteLength(js))
+console.log("JS minified:", Buffer.byteLength);
+
 const bytes = Buffer.byteLength(uri);
 console.log(bytes + " / " + LIMIT + " bytes, " + (bytes > LIMIT ? bytes - LIMIT + " over" : LIMIT - bytes + " left"));

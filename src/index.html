@@ -1,102 +1,123 @@
-<body style="margin:0;background:#1a1410;touch-action: none;"></body>
-<canvas id=c width=320 height=180 style="width:100%;max-width:177vh;display:block;margin:auto;"></canvas>
-<script>
-    x = c.getContext('2d')
-    W = 320
-    H = 180
-    M = Math
-    S = M.sin
-    C = M.cos
-    R = M.random;
+<body bgcolor=black style=margin:0><canvas id=c width=320 height=180
+        style=width:100%;max-width:177vh;display:block;margin:auto></canvas>
+    <script>
+        x = c.getContext('2d')
+        W = 320
+        H = 180
+        M = Math
+        S = M.sin
+        C = M.cos
+        R = M.random
+        f = (a, b) => 30 * S(a / 19 + S(b / 23) * 2) + 25 * S(b / 13 + a / 31) + 8 * S(a / 5 + b / 7)
+        px = py = an = t = o = ac = pt = tu = st = md = mx = my = de = sc = au = 0
+        alt = 40
+        sp = 1.6
+        tm = 30
+        K = Array(99).fill(0)
+        rg = []
 
-    f=(a,b)=>20*S(a/25+S(b/30)*2)+15*S(b/18+a/40)+5*S(a/7+b/10)
-    px=py=an=t=o=ac=pm=pt=tu=0;
-    alt=40
-    sp=1.6
-    st=md=mx=my=de=0
-    K={}
-
-    function r(){
-        st=1
-        pt=tu=0
-        sp=1.6
-        alt=f(px,py)+45
-    }
-    function die(){
-        st=2
-        de=t
-    }
-    go=()=>{if(st==0||st==2&&t>de+50)r()}
-    pm=e=>{
-        mx=e.clientX/c.clientWidth*2-1
-        my=e.clientY/c.clientHeight*2-1
-    }
-    onpointerdown=e=>{pm(e);md=1;go();};
-    onpointermove = e => { if (md) pm(e);};
-    onpointerup=()=>{md=0;mx=my=0;};
-
-    onkeydown=e=>K[e.code]=1
-    onkeyup=e=>K[e.code]=0
-
-    w=(s,y,z,l,v=l||W/2)=>{x.font='bold'+z+'px Arial';x.textAlign=l?'left':'center';x.fillStyle='#2a1408';x.fillText(s,v+1,y+1);x.fillStyle='#fff3d0';x.fillText(s,v,y)}
-
-    function U(){
-        t++
-        an=S(t/90)*.6;px+=S(an)*1.5;py+=C(an)*1.5;alt=f(px,py)+35
-        if(st==1){
-            kx=(K.ArrowRight||K.KeyD?1:0)-(K.ArrowLeft||K.KeyA?1:0);
-            ky=(K.ArrowUp||K.KeyW?1:0)-(K.ArrowDown||K.KeyS?1:0)
-            tu+=(M.max(-1,M.min(1,kx+md*mx))-tu)*.06;
-            pt+=(M.max(-1,M.min(1,ky+md*my))-pt)*.06;
-            an+=tu*.03
-
-            sp=M.max(.7,M.min(3,sp-pt*.03+(1.6-sp)*.01))
-            px+=S(an)*sp;py+=C(an)*sp;
-            alt+=pt*sp*.7-.15-(sp<1?(1-sp)*1.5:0)
-            if(alt<f(px,py)+2)die()
+        function r() {
+            st = 1
+            pt = tu = sc = 0
+            sp = 1.6
+            tm = 30
+            rg = []
+            alt = f(px, py) + 45
         }
-    }
-    function D(){
-        hz=70+pt*35
-        g=x.createLinearGradient(0,0,0,hz);g.addColorStop(0,'#34548a');g.addColorStop(1,'rgb(240,195,150)');x.fillStyle=g;x.fillRect(0,0,W,H)
+        function die() {
+            st = 2;
+            de = t;
+            G.gain.value = 0;
+            T(130, 25, .9, 'sawtooth')
+        }
+        go = _ => (!st || st > 1 && t > de + 90) && r();
 
-        sx=(M.atan2(S(.4-an),C(.4-an))/1.1+.5)*W
-        sy=hz-26;x.fillStyle='rgba(255,226,160,.25)';x.beginPath();x.arc(sx, sy, 24, 0, 7);x.fill();x.fillStyle = '#fff3d0';x.beginPath();x.arc(sx, sy, 11, 0, 7);x.fill();
-        for(i=0;i<W;i++){
-            a=an+(i/W-.5)*1.1;dx = S(a);dy = C(a);ym = H
-            for(z=1;z<260;z+=1+z/70){
-                X=px+dx*z
-                Y=py+dy*z
-                h=f(X, Y)
-                s=(alt -h)/z*110+hz|0
-                if(s<ym){
-                    k=1-z/260
-                    l=.7+(h-f(X+3,Y+3))/ 25
-                    x.fillStyle=`rgba(${210*l*k+240*(1-k)},${150*l*k+195*(1-k)},${90*l*k+150*(1-k)})`
-                    x.fillRect(i,s,1,ym-s);ym=s
-                }
+        A = _ => {
+            if (au) return;
+            au = new AudioContext;
+            b = au.createBuffer(1, 44100, 44100);
+            d = b.getChannelData(0);
+            for (i = 44100; i--;)d[i] = R() * 2 - 1; n = au.createBufferSource();
+            n.buffer = b;
+            n.loop = 1; F = au.createBiquadFilter();
+            G = au.createGain();
+            n.connect(F).connect(G).connect(au.destination);
+            n.start()
+        };
+        T = (a, b, d, y, o = au.createOscillator(), g = au.createGain(), u = au.currentTime + d) => { o.type = y; o.frequency.value = a; o.frequency.exponentialRampToValueAtTime(b, u); g.gain.value = .2; g.gain.exponentialRampToValueAtTime(.001, u); o.connect(g).connect(au.destination); o.start(); o.stop(u) };
+        onkeydown = e => {
+            K[e.keyCode] = 1;
+            go();
+            A()
+        };
+        onkeyup = e => K[e.keyCode] = 0;
+        onpointermove = onpointerup = e => {
+            mx = e.clientX / innerWidth * 2 - 1;
+            my = 1 - e.clientY / innerHeight * 2;
+            md = e.buttons
+        };
+        onpointerdown = e => {
+            onpointermove(e);
+            go();
+            A()
+        };
+        w = (s, y, z, l = 160) => {
+            x.font = 'bold ' + z + 'px Arial';
+            x.textAlign = 'center';
+            x.fillStyle = 'white';
+            x.fillText(s, l, y)
+        };
+        function U() {
+            t++;
+            if (!st) an = S(t / 90) * .6, px += S(an) * 1.5, py += C(an) * 1.5, alt = f(px, py) + 35;
+            if (st == 1) {
+                tu += (K[39] - K[37] + md * mx - tu) * .06;
+                pt += (K[38] - K[40] + md * my - pt) * .06;
+                an += tu * .03;
+                sp = M.min(3, M.max(.7, sp - pt * .03 + (1.6 - sp) * .01));
+                px += S(an) * sp; py += C(an) * sp;
+                alt += pt * sp * .7 - .15 - (sp < 1) * (1 - sp) * 1.5;
+                F.frequency.value = 250 + sp * 300; G.gain.value = .04 + sp * .07;
+                tm -= 1 / 60; tm < 0 && die();
+                while (rg.length < 4) q = an + (R() - .5) * 1.2, d = 150 + R() * 120, X = px + S(q) * d, Y = py + C(q) * d, rg.push([X, Y, M.max(f(X, Y) + 20, alt + R() * 60 - 30)]);
+                rg = rg.filter(q => {
+                    rx = q[0] - px; ry = q[1] - py; z = q[3] = rx * S(an) + ry * C(an); l = q[4] = rx * C(an) - ry * S(an);
+                    if (l * l + (q[2] - alt) ** 2 + z * z < 150) return sc += 10, tm += 5, alt += 6, sp += .8, T(1200, 1800, .5, 'sine'), 0;
+                    return z > -15
+                });
+                alt < f(px, py) + 2 && die()
             }
         }
-        x.save();x.translate(W/2,H-18-pt*8);x.rotate(tu*.3);
-        x.fillStyle='#3b2a20';x.beginPath();x.moveTo(-30,5);x.lineTo(-5,-2);x.lineTo(0,-9);x.lineTo(5,-2);x.lineTo(30,5);x.lineTo(0,2);x.fill();
-        x.fillStyle='#d98c45';x.fillRect(-30,4,6,1.5);x.fillRect(24,4,6,1.5)
-        x.restore()
-        if(st==0){
-            w('DUNAS',60,34); 
-            w('Space or click to fly',88,9)
-            w('Arrows/WASD: PIlot | Mouse: Hold and Drag',102,8)
-        }
-        if(st==2){
-            x.fillStyle='rgba(20,10,5,.6)';x.fillRect(0,0,W,H)
-            w('finished fly',H/2-10,22);w('Space or click to back')
-        }
-    }
 
+        function D() {
+            hz = 70 + pt * 35;
+            g = x.createLinearGradient(0, 0, 0, hz); g.addColorStop(0, '#34548a'); g.addColorStop(1, 'tan'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+            sx = (M.atan2(S(.4 - an), C(.4 - an)) / 1.1 + .5) * W; sy = hz - 26;
+            x.fillStyle = 'ivory'; x.beginPath(); x.arc(sx, sy, 11, 0, 7); x.fill();
+            for (i = 0; i < W; i++) {
+                a = an + (i / W - .5) * 1.1; dx = S(a); dy = C(a); ym = H;
+                for (z = 1; z < 260; z += 1 + z / 70) {
+                    X = px + dx * z; Y = py + dy * z; h = f(X, Y); s = (alt - h) / z * 110 + hz | 0;
+                    if (s < ym) {
+                        k = 1 - z / 260; l = (.7 + (h - f(X + 3, Y + 3)) / 25) * k; m = 1 - k;
+                        x.fillStyle = `rgb(${210 * l + 210 * m},${150 * l + 180 * m},${90 * l + 140 * m})`;
+                        x.fillRect(i, s, 1, ym - s); ym = s
+                    }
+                }
+            }
+            rg.map(q => {
+                z = q[3]; u = (M.atan2(q[4], z) / 1.1 + .5) * W; v = (alt - q[2]) / z * 110 + hz;
+                z > 2 && (x.strokeStyle = 'gold', x.lineWidth = 300 / z + 1, x.beginPath(), x.arc(u, v, 1210 / z, 0, 7), x.stroke())
+            });
+            x.strokeStyle = 'black'; x.lineWidth = 4; x.beginPath(); x.moveTo(W / 2 - 30, H - 12 + tu * 9); x.lineTo(W / 2 + 30, H - 12 - tu * 9); x.stroke();
+            st == 1 ? w(sc + '  ' + (tm | 0) + 's', 14, 12) :
+                (w(st ? 'Finish ' + sc : 'DUNAS', 70, 32), w('Arrow/Mouse - Click', 100, 9))
+        }
 
-    function L(n){
-        ac += M.min((n - o) / 16.7,4);o = n
-        for(;ac >= 1; ac --) U();D()
+        function L(n) {
+            ac += M.min((n - o) / 16.7, 4); o = n;
+            for (; ac >= 1; ac--)U();
+            D(); requestAnimationFrame(L)
+        }
         requestAnimationFrame(L)
-    }
-    requestAnimationFrame(L)
-</script>
+    </script>
